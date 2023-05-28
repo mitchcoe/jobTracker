@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "server": "ts-node --esm src/server.ts"
+    "server": "ts-node --esm src/server.ts",
+    "migrate_latest": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:latest",
+    "rollback": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:down"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
