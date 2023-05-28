@@ -1,12 +1,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-// import {
-//   getJobs,
-//   postJob,
-//   updateJob,
-//   archiveJob,
-//   deleteJob
-// } from './database.ts'
+import {
+  getJobs,
+  // postJob,
+  // updateJob,
+  // archiveJob,
+  // deleteJob
+} from './database.ts'
 
 const app = express();
 const port = 8080;
@@ -17,7 +17,7 @@ app.use(
   })
 );
 
-// app.get('/jobs', getJobs)
+app.get('/jobs', getJobs)
 // app.post('/jobs', postJob)
 // app.put('/jobs', updateJob)
 // app.put('/jobs/archive', archiveJob)
