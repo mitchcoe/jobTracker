@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "server": "ts-node --esm src/server.ts",
     "migrate_latest": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:latest",
-    "rollback": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:down"
+    "rollback": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:down",
+    "seed": "NODE_OPTIONS='--loader ts-node/esm' knex seed:run"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",

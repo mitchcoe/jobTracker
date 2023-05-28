@@ -1,16 +1,16 @@
 export type JobType = {
-  jobId?: number,
+  job_id?: number,
   company: string,
   title: string,
-  salaryRange: number[],
+  salary_range: number[],
   remote: boolean,
   website: string,
-  foundOn: string,
-  jobPosting: string,
+  found_on: string,
+  job_posting: string,
   contacts: ContactType[] | null,
   notes: string | null,
   archived: boolean,
-  applicationDate: string,
+  application_date: string,
   rank: number,
   status: 'applied' | 'interviewing' | 'rejected' | 'unavailable'
 };
