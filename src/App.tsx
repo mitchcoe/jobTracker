@@ -1,34 +1,30 @@
-import { 
-  // useEffect,
-  // useCallback,
-  useState
-} from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-// import Job from './Job/Job'
+import Job from './Job/Job'
 
-// import type { JobType } from './globalTypes'
+import type { JobType } from './globalTypes'
 
 function App() {
   const [count, setCount] = useState(0)
-  // const [jobs, setJobs] = useState<JobType[] | []>([])
+  const [jobs, setJobs] = useState<JobType[] | null>([])
 
-  // const getJobs = useCallback(async () => {
-  //   await fetch('/jobs')
-  //     .then(response => response.json())
-  //     .then(response => setJobs(response.data))
-  //     .catch(error => console.log(error));
-  // }, [])
+  const getJobs = useCallback(async () => {
+    await fetch('/jobs')
+      .then(response => response.json())
+      .then(response => setJobs(response))
+      .catch(error => console.log(error));
+  }, [])
 
-  // useEffect(() => {
-  //   getJobs();
-  // }, [getJobs]);
+  useEffect(() => {
+    getJobs();
+  }, [getJobs]);
 
   return (
     <>
       <div>
-        {/* <Job {...jobs[0]}/> */}
+        {jobs && jobs.length > 0 && (<Job {...jobs[0]}/>)}
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>

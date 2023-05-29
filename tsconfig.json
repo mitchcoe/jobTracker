@@ -18,11 +18,11 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    // "noUnusedParameters": true,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "jsxImportSource": "@emotion/react",
   },
-  "include": ["src", "migrations/**/*"],
+  "include": ["src", "migrations/**/*", "server.ts", "database.ts"],
   "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

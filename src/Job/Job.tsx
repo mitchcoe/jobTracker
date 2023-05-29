@@ -48,14 +48,14 @@ export default function Job(props: JobType) {
         Status: {status}
       </Typography>
       <Typography>
-        {salary_range.length > 1 ? (`${salary_range[0]} - ${salary_range[1]}`) : (salary_range[0])}
+        {salary_range && salary_range.length > 1 ? (`${salary_range[0]} - ${salary_range[1]}`) : (salary_range[0])}
       </Typography>
     </AccordionSummary>
     <AccordionDetails>
       <List>
         <ListItem>
           <Typography>
-            Remote: {remote}
+            Remote: {`${remote}`}
           </Typography>
         </ListItem>
         <ListItem>

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import knexPackage from 'knex';
-import knexConfig from '../knexfile.js'
+import knexConfig from './knexfile.js'
 const knex = knexPackage(knexConfig['development']);
 
-export const getJobs = async(request: Request, response: Response) => {
+export const getJobs = async(_request: Request, response: Response) => {
   try {
     const query = await knex.select().from('jobs');
-    console.log(query)
+    // console.log(query)
     response.status(200).json(query);
   } catch(e: unknown) {
     console.log((e as Error).stack)
