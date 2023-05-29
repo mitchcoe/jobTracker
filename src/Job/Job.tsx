@@ -34,6 +34,7 @@ export default function Job(props: JobType) {
       expandIcon={<ExpandMoreIcon />}
       aria-controls={`panel${job_id}-content`}
       id={`panel${job_id}-header`}
+      sx={{'& .MuiAccordionSummary-content': {justifyContent: 'space-around'}, width: '50vw'}}
     >
       <Typography>
         Rank: {rank}
@@ -45,14 +46,19 @@ export default function Job(props: JobType) {
         {title}
       </Typography>
       <Typography>
-        Status: {status}
+        Status: {status[0].toUpperCase() + status.slice(1)}
       </Typography>
       <Typography>
-        {salary_range && salary_range.length > 1 ? (`${salary_range[0]} - ${salary_range[1]}`) : (salary_range[0])}
+        ${salary_range && salary_range.length > 1 ? (`${salary_range[0]} - $${salary_range[1]}`) : (salary_range[0])}
       </Typography>
     </AccordionSummary>
     <AccordionDetails>
       <List>
+        <ListItem>
+          <Typography>
+            Date applied: {application_date.split('T')[0]}
+          </Typography>
+        </ListItem>
         <ListItem>
           <Typography>
             Remote: {`${remote}`}
@@ -61,40 +67,36 @@ export default function Job(props: JobType) {
         <ListItem>
           <a href={website}>
             <Typography>
-              {company}
+              Company website: {company}
             </Typography>
           </a>
         </ListItem>
         <ListItem>
           <Typography>
-            {found_on}
+            Job posting found on: {found_on}
           </Typography>
         </ListItem>
-        <ListItem>
+        <ListItem sx={{display: 'flex', flexDirection: 'row'}}>
           <a href={job_posting}>
-            <Typography>
-              {job_posting}
-            </Typography>
+          <Typography>
+            Job posting
+          </Typography>
+            {/* {job_posting} */}
           </a>
         </ListItem>
         <ListItem>
           <Typography>
-            {contacts ? contacts[0].name : ''}
+            Contacts: {contacts ? contacts[0].name : ''}
           </Typography>
         </ListItem>
         <ListItem>
           <Typography>
-            {notes}
+            Notes: {notes}
           </Typography>
         </ListItem>
         <ListItem>
           <Typography>
-            {archived}
-          </Typography>
-        </ListItem>
-        <ListItem>
-          <Typography>
-            {application_date}
+            Archived: {`${archived}`}
           </Typography>
         </ListItem>
       </List>
