@@ -1,4 +1,4 @@
-// import * as React from 'react';
+import { useState } from 'react';
 // import ListItemText from '@mui/material/ListItemText';
 import {
   // List,
@@ -15,9 +15,7 @@ import {
   Button
 } from '@mui/material'
 import { ExpandMore, Edit, Inventory} from '@mui/icons-material';
-
 import type { JobType, ContactType } from '../globalTypes';
-import { useState } from 'react';
 
 type SetStateType = React.Dispatch<React.SetStateAction<boolean | number | string| number[]>>
 
@@ -77,7 +75,7 @@ export default function Job(props: JobType) {
   }
 
   const handleSubmit = (_event: React.SyntheticEvent) => {
-    return
+    return;
   }
 
   const CustomTextField = (label: string, value: string | number| number[], valueType: string, stateChangeFunc: SetStateType) => (
