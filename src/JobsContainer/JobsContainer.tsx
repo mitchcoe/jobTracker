@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { Tabs, Tab, Box, Typography, Pagination } from '@mui/material';
+import { Tabs, Tab, Box, Typography, TablePagination } from '@mui/material';
 import Job from '../Job/Job';
 
 import type { JobType } from '../globalTypes';
@@ -38,11 +38,23 @@ function a11yProps(index: number) {
 }
 
 export default function JobsContainer(props: {jobs: JobType[]}) {
-  const { jobs } = props
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [value, setValue] = React.useState(0);
+  const { jobs } = props
 
+  // const testJobs = jobs && Array(6).fill(jobs[0])
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
 
   return (
@@ -54,15 +66,29 @@ export default function JobsContainer(props: {jobs: JobType[]}) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {jobs.filter((job) => !job.archived).map((job, key) => (
+        {jobs.filter((job) => !job.archived).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((job, key) => (
           <Job {...job} key={key + job.title}/>
         ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {jobs.filter((job) => job.archived).map((job, key) => (
+        {jobs.filter((job) => job.archived).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((job, key) => (
           <Job {...job} key={key + job.title}/>
         ))}
       </TabPanel>
+      <TablePagination
+        component="div"
+        count={jobs.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 25, 100]}
+        sx={{
+          color: 'white',
+          '& .MuiTablePagination-actions button': {color: 'white'},
+          '& .MuiTablePagination-selectIcon': {color: 'white'}
+        }}
+      />
     </Box>
   )
 

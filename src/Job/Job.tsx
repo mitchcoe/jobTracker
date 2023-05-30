@@ -11,7 +11,8 @@ import {
   IconButton,
   Tooltip,
   TextField,
-  Box
+  Box,
+  Button
 } from '@mui/material'
 import { ExpandMore, Edit, Inventory} from '@mui/icons-material';
 
@@ -32,7 +33,7 @@ export default function Job(props: JobType) {
     website,
     found_on,
     job_posting,
-    contacts,
+    // contacts,
     notes,
     archived,
     application_date,
@@ -48,7 +49,7 @@ export default function Job(props: JobType) {
   const [jobWebsite, setJobWebsite] = useState(website)
   const [jobFoundOn, setJobFoundOn] = useState(found_on)
   const [jobPosting, setJobPosting] = useState(job_posting)
-  const [jobContacts, setJobContacts] = useState(contacts)
+  // const [jobContacts, setJobContacts] = useState(contacts)
   const [jobNotes, setJobNotes] = useState(notes || '')
   const [isArchived, setIsArchived] = useState(archived)
   const [applicationDate, setAppplicationDate] = useState(application_date.split('T')[0])
@@ -64,6 +65,7 @@ export default function Job(props: JobType) {
     event.stopPropagation();
 
   }
+
   const handleFieldChange: HandleFieldChangeType = (event, stateChangeFunc, valueType) => {
     if(valueType === 'number') {
       stateChangeFunc(parseInt(event.target.value))
@@ -72,6 +74,10 @@ export default function Job(props: JobType) {
     } else {
       stateChangeFunc(event.target.value)
     }
+  }
+
+  const handleSubmit = (_event: React.SyntheticEvent) => {
+    return
   }
 
   const CustomTextField = (label: string, value: string | number| number[], valueType: string, stateChangeFunc: SetStateType) => (
@@ -109,11 +115,14 @@ export default function Job(props: JobType) {
         {CustomTextField("Company Website", jobWebsite, "string", setJobWebsite as SetStateType)}
         {CustomTextField("Job Posting Found On", jobFoundOn, "string", setJobFoundOn as SetStateType)}
         {CustomTextField("Job posting", jobPosting, "string", setJobPosting as SetStateType)}
-        {/* {CustomTextField("Date Contacts", jobContacts, setJobContacts)} */}
+        {/* {CustomTextField("Contacts", jobContacts, setJobContacts)} */}
         {/* {CustomTextField("Archived", isArchived, setIsArchived)} */}
         {CustomTextField("Notes", jobNotes, "string", setJobNotes as SetStateType)}
       </div>
       <div>
+        {editing && (
+          <Button variant="outlined" onClick={handleSubmit} sx={{mt: 2}}>Submit</Button>
+        )}
       </div>
     </Box>
   )
