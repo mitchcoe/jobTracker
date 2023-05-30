@@ -1,9 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import Pagination from '@mui/material/Pagination';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import { Tabs, Tab, Box, Typography, Pagination } from '@mui/material';
 import Job from '../Job/Job';
 
 import type { JobType } from '../globalTypes';
@@ -52,9 +48,9 @@ export default function JobsContainer(props: {jobs: JobType[]}) {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="Job Applications" sx={{'& .MuiTabs-flexContainer': {justifyContent: 'center'}}}>
-          <Tab label="Current" {...a11yProps(0)} />
-          <Tab label="Archived" {...a11yProps(1)} />
+        <Tabs value={value} onChange={handleChange} aria-label="Job Applications" centered >
+          <Tab label="Current" sx={{color: 'white', '&.Mui-selected': {outline: 'none'}}} {...a11yProps(0)} />
+          <Tab label="Archived" sx={{color: 'white', '&.Mui-selected': {outline: 'none'}}} {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
