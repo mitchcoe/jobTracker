@@ -15,8 +15,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import type { JobType } from '../globalTypes';
 
-export default function NewJobForm(props: {rank: number, handleClose: () => void}) {
-  const { rank, handleClose } = props
+export default function NewJobForm(props: {rank: number, handleClose: () => void, getJobs: () => void}) {
+  const { rank, handleClose, getJobs } = props
   const [companyName, setCompanyName] = useState('')
   const [jobTitle, setJobTitle] = useState('')
   const [jobSalaryRange, setJobSalaryRange] = useState('')
@@ -43,7 +43,7 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
       body: JSON.stringify({
         company: companyName,
         title: jobTitle,
-        salary_range: [formattedSalaryRange],
+        salary_range: formattedSalaryRange,
         remote: isRemote,
         website: jobWebsite,
         found_on: jobFoundOn,
@@ -58,6 +58,8 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
     })
     .then(response => response.json())
     .then(response => console.log(response.data))
+    .then(() => handleClose())
+    .then(() => getJobs())
     .catch(error => console.log(error));
   }
 
@@ -102,7 +104,6 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
                 labelId="remote-position"
                 label="Remote Position"
                 value={`${isRemote}`}
-                // placeholder="Remote Position?"
                 variant="outlined"
                 onChange={handleRemoteChange}
               >

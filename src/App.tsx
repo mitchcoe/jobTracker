@@ -81,7 +81,7 @@ function App() {
           },
         ]}
       >
-        <NewJobForm rank={jobs.length + 1} handleClose={handleClose}/>
+        <NewJobForm rank={jobs.length + 1} handleClose={handleClose} getJobs={getJobs}/>
       </Popper>
     </React.Fragment>
   )

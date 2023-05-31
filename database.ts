@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import knexPackage from 'knex';
 import knexConfig from './knexfile.js'
 const knex = knexPackage(knexConfig['development']);
+import type { JobType } from './src/globalTypes.js';
 
 export const getJobs = async(_request: Request, response: Response) => {
   try {
@@ -14,7 +15,7 @@ export const getJobs = async(_request: Request, response: Response) => {
 }
 
 export const postJob = async(request: Request, response: Response) => {
-  console.log(request.body)
+  // console.log(request.body)
   try {
     const {
       company,
@@ -30,7 +31,7 @@ export const postJob = async(request: Request, response: Response) => {
       application_date,
       rank,
       status,
-     } = request.body;
+     }: JobType = request.body;
 
      const query = await knex('jobs').insert(
       {
