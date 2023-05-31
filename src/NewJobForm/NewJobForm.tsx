@@ -12,11 +12,13 @@ import {
   CardContent,
   Slider,
   Typography,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 
-import type { JobType } from '../globalTypes';
+import type { ContactType } from '../globalTypes';
 
 function valuetext(value: number) {
   return `$${value}`;
@@ -31,8 +33,9 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
   const [jobWebsite, setJobWebsite] = useState('')
   const [jobFoundOn, setJobFoundOn] = useState('')
   const [jobPosting, setJobPosting] = useState('')
-  const [jobContacts, setJobContacts] = useState<JobType[] | null>(null)
+  const [jobContact, setJobContact] = useState<ContactType | null>(null)
   const [jobNotes, setJobNotes] = useState('')
+  const [conctactsChecked, setContactsChecked] = useState(false);
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     setJobSalaryRange(newValue as number[]);
@@ -52,12 +55,12 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
         website: jobWebsite,
         found_on: jobFoundOn,
         job_posting: jobPosting,
-        contacts: null,
+        contacts: [jobContact],
         notes: jobNotes,
         archived: false,
         application_date: new Date().toISOString(),
         rank,
-        status: 'Applied'
+        status: 'applied'
       }),
     })
     .then(response => response.json())
@@ -71,12 +74,53 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
     event.target.value === "true" ? setIsRemote(true) : setIsRemote(false)
   }
 
+  const handleContactCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setContactsChecked(event.target.checked)
+  }
+
+  const handleContactChange = (key: string, value: string) => {
+    setJobContact(Object.assign({...jobContact}, {[key]: value} as ContactType))
+    console.log(jobContact)
+  }
+
+  const Contacts = () => (
+    <>
+      <TextField
+        label="Name"
+        value={jobContact?.name}
+        placeholder="Name"
+        variant="outlined"
+        onChange={(e) => handleContactChange('name', e.target.value)}
+      />
+      <TextField
+        label="Phone #"
+        value={jobContact?.phone}
+        placeholder="Phone #"
+        variant="outlined"
+        onChange={(e) => handleContactChange('phone', e.target.value)}
+      />
+      <TextField
+        label="Email"
+        value={jobContact?.email}
+        placeholder="Email"
+        variant="outlined"
+        onChange={(e) => handleContactChange('email', e.target.value)}
+      />
+      <TextField
+        label="Role"
+        value={jobContact?.role}
+        placeholder="Role"
+        variant="outlined"
+        onChange={(e) => handleContactChange('role', e.target.value)}
+      />
+    </>
+  )
   return (
     <Box
       component="form"
       encType="multipart/form-data"
       autoComplete="off"
-      sx={{minWidth: '300px', width: '30vw'}}
+      sx={{minWidth: '300px', width: '30vw', overflow: 'scroll', maxHeight: '85vh'}}
     >
       <Card sx={{padding: '16px'}}>
         <CardContent>
@@ -142,6 +186,11 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
               variant="outlined"
               onChange={(e) => setJobPosting(e.target.value)}
             />
+            <FormControlLabel
+              control={<Checkbox checked={conctactsChecked} onChange={handleContactCheckboxChange}/>}
+              label="Contacts?"
+            />
+            {conctactsChecked && Contacts()}
             <TextareaAutosize
               minRows={3}
               placeholder="Notes"
