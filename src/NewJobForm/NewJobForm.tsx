@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 
 import type { JobType } from '../globalTypes';
 
@@ -32,9 +33,6 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
   const [jobPosting, setJobPosting] = useState('')
   const [jobContacts, setJobContacts] = useState<JobType[] | null>(null)
   const [jobNotes, setJobNotes] = useState('')
-  const [applicationDate, setAppplicationDate] = useState(new Date().toISOString())
-  const [jobRank, setJobRank] = useState(rank)
-  const [jobStatus, setJobStatus] = useState('Applied')
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     setJobSalaryRange(newValue as number[]);
@@ -57,9 +55,9 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
         contacts: null,
         notes: jobNotes,
         archived: false,
-        application_date: applicationDate,
+        application_date: new Date().toISOString(),
         rank,
-        status: jobStatus
+        status: 'Applied'
       }),
     })
     .then(response => response.json())
@@ -143,6 +141,12 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
               placeholder="Job Posting"
               variant="outlined"
               onChange={(e) => setJobPosting(e.target.value)}
+            />
+            <TextareaAutosize
+              minRows={3}
+              placeholder="Notes"
+              style={{color: "black", backgroundColor: 'white'}}
+              onChange={(e) => setJobNotes(e.target.value)}
             />
           </Stack>
         </CardContent>
