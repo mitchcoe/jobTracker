@@ -10,16 +10,22 @@ import {
   Card,
   CardActions,
   CardContent,
+  Slider,
+  Typography,
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import type { JobType } from '../globalTypes';
 
+function valuetext(value: number) {
+  return `$${value}`;
+}
+
 export default function NewJobForm(props: {rank: number, handleClose: () => void, getJobs: () => void}) {
   const { rank, handleClose, getJobs } = props
   const [companyName, setCompanyName] = useState('')
   const [jobTitle, setJobTitle] = useState('')
-  const [jobSalaryRange, setJobSalaryRange] = useState('')
+  const [jobSalaryRange, setJobSalaryRange] = useState<number[]>([65000, 150000])
   const [isRemote, setIsRemote] = useState<boolean | string>('')
   const [jobWebsite, setJobWebsite] = useState('')
   const [jobFoundOn, setJobFoundOn] = useState('')
@@ -30,11 +36,11 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
   const [jobRank, setJobRank] = useState(rank)
   const [jobStatus, setJobStatus] = useState('Applied')
 
+  const handleSliderChange = (_event: Event, newValue: number | number[]) => {
+    setJobSalaryRange(newValue as number[]);
+  };
+
   const handleCreateJob = async () => {
-    let formattedSalaryRange: string[] | number[] = jobSalaryRange.indexOf(',') !== -1 ? 
-      jobSalaryRange.split(',') : [jobSalaryRange]
-    formattedSalaryRange = formattedSalaryRange.map((salaryItem: string) => parseInt(salaryItem))
-  
     await fetch('/jobs', {
       method:'POST',
       headers: {
@@ -43,7 +49,7 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
       body: JSON.stringify({
         company: companyName,
         title: jobTitle,
-        salary_range: formattedSalaryRange,
+        salary_range: jobSalaryRange,
         remote: isRemote,
         website: jobWebsite,
         found_on: jobFoundOn,
@@ -74,7 +80,7 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
       autoComplete="off"
       sx={{minWidth: '300px', width: '30vw'}}
     >
-      <Card>
+      <Card sx={{padding: '16px'}}>
         <CardContent>
           <Stack spacing={2}>
             <TextField
@@ -91,12 +97,18 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
               variant="outlined"
               onChange={(e) => setJobTitle(e.target.value)}
             />
-            <TextField
-              label="Job Salary"
+            <Typography gutterBottom>
+              Salary Range
+            </Typography>
+            <Slider
+              getAriaLabel={() => 'Temperature range'}
               value={jobSalaryRange}
-              placeholder="Job Salary"
-              variant="outlined"
-              onChange={(e) => setJobSalaryRange(e.target.value)}
+              onChange={handleSliderChange}
+              valueLabelDisplay="auto"
+              getAriaValueText={valuetext}
+              min={65000}
+              max={150000}
+              step={5000}
             />
             <FormControl>
               <InputLabel id="remote-position">Remote Position</InputLabel>
