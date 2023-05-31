@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import Popper from '@mui/material/Popper';
 import './App.css'
 import JobsContainer from './JobsContainer/JobsContainer'
-import NewJobForm from './NewJobForm/NewJobForm'
+import JobForm from './JobForm/JobForm'
 
 import type { JobType } from './globalTypes'
 
@@ -11,7 +11,7 @@ function App() {
   const [jobs, setJobs] = useState<JobType[]>([])
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
-  const id = open ? 'simple-popper' : undefined;
+  const id = open ? 'new-job-popper' : undefined;
 
   const getJobs = useCallback(async () => {
     await fetch('/jobs')
@@ -51,7 +51,7 @@ function App() {
         </Button>
       </div>
       <div>
-        <JobsContainer jobs={jobs}/>
+        <JobsContainer jobs={jobs} getJobs={getJobs}/>
       </div>
       <Popper
         id={id}
@@ -81,7 +81,11 @@ function App() {
           },
         ]}
       >
-        <NewJobForm rank={jobs.length + 1} handleClose={handleClose} getJobs={getJobs}/>
+        <JobForm
+          handleClose={handleClose}
+          getJobs={getJobs}
+          formType="Create"
+        />
       </Popper>
     </React.Fragment>
   )

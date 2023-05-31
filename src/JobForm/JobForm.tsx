@@ -18,24 +18,34 @@ import {
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 
-import type { ContactType } from '../globalTypes';
+import type { JobType, ContactType } from '../globalTypes';
 
 function valuetext(value: number) {
   return `$${value}`;
 }
 
-export default function NewJobForm(props: {rank: number, handleClose: () => void, getJobs: () => void}) {
-  const { rank, handleClose, getJobs } = props
-  const [companyName, setCompanyName] = useState('')
-  const [jobTitle, setJobTitle] = useState('')
-  const [jobSalaryRange, setJobSalaryRange] = useState<number[]>([65000, 150000])
-  const [isRemote, setIsRemote] = useState<boolean | string>('')
-  const [jobWebsite, setJobWebsite] = useState('')
-  const [jobFoundOn, setJobFoundOn] = useState('')
-  const [jobPosting, setJobPosting] = useState('')
-  const [jobContact, setJobContact] = useState<ContactType | null>(null)
-  const [jobNotes, setJobNotes] = useState('')
-  const [conctactsChecked, setContactsChecked] = useState(false);
+type JobFormProps = {
+  handleClose: () => void,
+  getJobs: () => void,
+  job?: JobType,
+  formType: "Create" | "Edit"
+}
+
+export default function JobForm(props: JobFormProps) {
+  const { job, handleClose, getJobs, formType } = props
+  const [companyName, setCompanyName] = useState(job?.company || '')
+  const [jobTitle, setJobTitle] = useState(job?.title || '')
+  const [jobSalaryRange, setJobSalaryRange] = useState<number[]>(job?.salary_range || [65000, 150000])
+  const [isRemote, setIsRemote] = useState<boolean>(job?.remote || false)
+  const [jobWebsite, setJobWebsite] = useState(job?.website || '')
+  const [jobFoundOn, setJobFoundOn] = useState(job?.found_on || '')
+  const [jobPosting, setJobPosting] = useState(job?.job_posting || '')
+  const [jobContact, setJobContact] = useState<ContactType | null>(job?.contacts && job.contacts[0] || null)
+  const [jobNotes, setJobNotes] = useState(job?.notes || '')
+  const [conctactsChecked, setContactsChecked] = useState(!!job?.contacts || false);
+  const [isFavorite, setIsFavorite] = useState(job?.favorite || false)
+  const [jobStatus, setJobStatus] = useState(job?.status || '')
+  const job_id = job?.job_id
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     setJobSalaryRange(newValue as number[]);
@@ -59,7 +69,7 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
         notes: jobNotes,
         archived: false,
         application_date: new Date().toISOString(),
-        rank,
+        favorite: isFavorite,
         status: 'applied'
       }),
     })
@@ -70,8 +80,53 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
     .catch(error => console.log(error));
   }
 
+  const handleEditJob = async () => {
+    await fetch('/jobs', {
+      method:'PUT',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        job_id,
+        company: companyName,
+        title: jobTitle,
+        salary_range: jobSalaryRange,
+        remote: isRemote,
+        website: jobWebsite,
+        found_on: jobFoundOn,
+        job_posting: jobPosting,
+        contacts: [jobContact],
+        notes: jobNotes,
+        archived: false,
+        application_date: new Date().toISOString(),
+        favorite: isFavorite,
+        status: 'applied'
+      })
+    })
+    .then(response => response.json())
+    .then(response => console.log(response.data))
+    .then(() => handleClose())
+    .then(() => getJobs())
+  }
+
+  const handleSubmit = () => {
+    if(formType === 'Edit') {
+      handleEditJob()
+    } else {
+      handleCreateJob()
+    }
+  }
+
   const handleRemoteChange = (event: SelectChangeEvent) => {
     event.target.value === "true" ? setIsRemote(true) : setIsRemote(false)
+  }
+
+  const handleFavoriteChange = (event: SelectChangeEvent) => {
+    event.target.value === "true" ? setIsFavorite(true) : setIsFavorite(false)
+  }
+
+  const handleJobStatusChange = (event: SelectChangeEvent) => {
+    setJobStatus(event.target.value)
   }
 
   const handleContactCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,6 +246,38 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
               label="Contacts?"
             />
             {conctactsChecked && Contacts()}
+            {formType === "Edit" && (
+              <>
+                <FormControl>
+                  <InputLabel id="job-status">Job Status</InputLabel>
+                  <Select
+                    labelId="job-status"
+                    label="Job Status"
+                    value={jobStatus}
+                    variant="outlined"
+                    onChange={handleJobStatusChange}
+                  >
+                    <MenuItem value="applied">Applied</MenuItem>
+                    <MenuItem value="interviewing">Interviewing</MenuItem>
+                    <MenuItem value="rejected">Rejected</MenuItem>
+                    <MenuItem value="unavailable">Unavailable</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl>
+                  <InputLabel id="favorite">Favorite?</InputLabel>
+                  <Select
+                    labelId="favorite"
+                    label="Favorite?"
+                    value={`${isFavorite}`}
+                    variant="outlined"
+                    onChange={handleFavoriteChange}
+                  >
+                    <MenuItem value="true">True</MenuItem>
+                    <MenuItem value="false">False</MenuItem>
+                  </Select>
+                </FormControl>
+              </>
+            )}
             <TextareaAutosize
               minRows={3}
               placeholder="Notes"
@@ -200,7 +287,7 @@ export default function NewJobForm(props: {rank: number, handleClose: () => void
           </Stack>
         </CardContent>
         <CardActions sx={{justifyContent: 'space-evenly'}}>
-          <Button variant="outlined" onClick={handleCreateJob}>Submit</Button>
+          <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
           <Button variant="outlined" onClick={handleClose}>Close</Button>
         </CardActions>
       </Card>

@@ -11,7 +11,7 @@ export type JobType = {
   notes: string | null,
   archived: boolean,
   application_date: string,
-  rank: number,
+  favorite: boolean,
   status: 'applied' | 'interviewing' | 'rejected' | 'unavailable'
 };
 

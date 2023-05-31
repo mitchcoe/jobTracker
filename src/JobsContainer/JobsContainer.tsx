@@ -1,13 +1,13 @@
-import React, { useEffect, useCallback, useState } from 'react'
-import { Tabs, Tab, Box, Typography, TablePagination } from '@mui/material';
+import React, {useState } from 'react'
+import { Tabs, Tab, Box, TablePagination } from '@mui/material';
 import Job from '../Job/Job';
 
 import type { JobType } from '../globalTypes';
 
 type TabPanelProps = {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+  children?: React.ReactNode,
+  index: number,
+  value: number,
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -37,11 +37,11 @@ function a11yProps(index: number) {
   };
 }
 
-export default function JobsContainer(props: {jobs: JobType[]}) {
+export default function JobsContainer(props: {jobs: JobType[], getJobs: () => void,}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [value, setValue] = React.useState(0);
-  const { jobs } = props
+  const { jobs, getJobs } = props
 
   // const testJobs = jobs && Array(6).fill(jobs[0])
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -67,12 +67,12 @@ export default function JobsContainer(props: {jobs: JobType[]}) {
       </Box>
       <TabPanel value={value} index={0}>
         {jobs.filter((job) => !job.archived).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((job, key) => (
-          <Job {...job} key={key + job.title}/>
+          <Job job={job} key={key + job.title} getJobs={getJobs}/>
         ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
         {jobs.filter((job) => job.archived).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((job, key) => (
-          <Job {...job} key={key + job.title}/>
+          <Job job={job} key={key + job.title} getJobs={getJobs}/>
         ))}
       </TabPanel>
       <TablePagination

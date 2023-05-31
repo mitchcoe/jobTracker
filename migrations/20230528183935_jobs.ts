@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('notes');
     table.boolean('archived').notNullable();
     table.date('application_date').notNullable();
-    table.integer('rank').notNullable();
+    table.boolean('favorite').defaultTo(false);
     table.string('status').notNullable();
   });
 }

@@ -19,7 +19,7 @@ export async function seed(knex: Knex): Promise<void> {
           notes: null,
           archived: false,
           application_date: '2023-05-27',
-          rank: 1,
+          favorite: true,
           status: 'applied',
         },
     ]);

@@ -8,7 +8,7 @@ const STATIC_PATH = `${process.cwd()}/src/`;
 import {
   getJobs,
   postJob,
-  // updateJob,
+  updateJob,
   // archiveJob,
   // deleteJob
 } from './database.ts'
@@ -24,7 +24,7 @@ app.use(
 
 app.get('/jobs', getJobs)
 app.post('/jobs', postJob)
-// app.put('/jobs', updateJob)
+app.put('/jobs', updateJob)
 // app.put('/jobs/archive', archiveJob)
 // app.delete('/jobs', deleteJob)
 
