@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import JobForm from '../JobForm/JobForm';
+import TextAreaModal from '../TextAreaModal/TextAreaModal';
 import {
   Typography,
   ButtonGroup,
@@ -15,24 +16,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Modal
 } from '@mui/material'
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { Edit, Inventory, KeyboardArrowDown, KeyboardArrowUp} from '@mui/icons-material';
 import type { JobType } from '../globalTypes';
-
-// type SetStateType = React.Dispatch<React.SetStateAction<boolean | number | string| number[]>>
-
-// type HandleFieldChangeType = (event: React.ChangeEvent<HTMLInputElement>, stateChangeFunc: SetStateType, valueType: string) => void
-
-const modalStyles = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-};
 
 export default function Job(props: {job: JobType, getJobs: () => void}) {
   const { getJobs, job } = props
@@ -56,6 +42,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
   const [open, setOpen] = useState(false);
   const [rowOpen, setRowOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [contactsOpen, setContactsOpen] = useState(false);
   
 
   const handleClose = () => {
@@ -72,6 +59,14 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
 
   const handleNotesClose = () => {
     setNotesOpen(false)
+  }
+
+  const handleContactsOpen = () => {
+    setContactsOpen(true)
+  }
+
+  const handleContactsClose = () => {
+    setContactsOpen(false)
   }
 
   const handleArchiveClick = async () => {
@@ -146,7 +141,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
                           Found on: {found_on}
                         </a>
                       </TableCell>
-                      <TableCell >Contacts</TableCell>
+                      <TableCell ><Button onClick={handleContactsOpen}>Contacts</Button></TableCell>
                       <TableCell ><Button onClick={handleNotesOpen}>Notes</Button></TableCell>
                       <TableCell >Favorite: {`${favorite}`}</TableCell>
                     </TableRow>
@@ -176,39 +171,21 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
         formType="Edit"
         job={job}
       />
-      <Modal
-        open={notesOpen}
-        onClose={handleNotesClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-        component="form"
-        encType="multipart/form-data"
-        autoComplete="off"
-        sx={[
-          modalStyles,
-          {
-            minWidth: '300px',
-            width: '30vw',
-            overflow: 'scroll',
-            maxHeight: '85vh',
-            minHeight: '300px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex'
-          }
-        ]}
-      >
-        <TextareaAutosize
-          minRows={3}
-          placeholder="Notes"
-          style={{color: "black", backgroundColor: 'white', width: '30vw', height: '300px'}}
-          defaultValue={notes as string}
-          readOnly
-        />
-      </Box>
-      </Modal>
+      <TextAreaModal 
+        modalOpen={notesOpen}
+        closeFunc={handleNotesClose}
+        placeholderText="Notes"
+        text={notes as string}
+      />
+      <TextAreaModal 
+        modalOpen={contactsOpen}
+        closeFunc={handleContactsClose}
+        placeholderText="Contacts"
+        text={// eslint-disable-next-line
+          // @ts-ignore
+          contacts[0] !== null ? `${contacts[0].name}\n${contacts[0].phone}\n${contacts[0].email}\n${contacts[0].role}\n` : 'No Contacts'
+        }
+      />
     </>
   )
 }
