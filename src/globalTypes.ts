@@ -15,9 +15,9 @@ export type JobType = {
   status: 'applied' | 'interviewing' | 'rejected' | 'unavailable'
 };
 
-export type ContactType = {
+export interface ContactType extends Record<string, string> {
   name: string,
   phone: string,
   email: string,
   role: string
-};
+}

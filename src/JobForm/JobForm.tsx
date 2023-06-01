@@ -93,30 +93,49 @@ export default function JobForm(props: JobFormProps) {
   }
 
   const handleEditJob = async () => {
+    const dataToUpdate: Record<string, string | number | number[] | boolean | undefined | null | ContactType[]> = {
+      job_id,
+      company: companyName,
+      title: jobTitle,
+      salary_range: jobSalaryRange,
+      remote: isRemote,
+      website: jobWebsite,
+      found_on: jobFoundOn,
+      job_posting: jobPosting,
+      notes: jobNotes,
+      archived: false,
+      application_date: applicationDate,
+      favorite: isFavorite,
+      status: 'applied'
+    }
+
+    // this helps ensure that there is more than just a role present on a contact to help identify them
+    if(jobContact) {
+      const contactKeys = Object.keys(jobContact)
+      let count = 0
+      if(contactKeys.length === 1 && contactKeys[0] === 'role') {
+        dataToUpdate['contacts'] = null
+      } else {
+        for(const key in jobContact) {
+          if(jobContact[key]) {
+            dataToUpdate['contacts'] = [jobContact]
+          } else {
+            count++
+          }
+        }
+        if(count === contactKeys.length || count >= 3) dataToUpdate['contacts'] = null
+      }
+    }
+
     await fetch('/jobs', {
       method:'PUT',
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        job_id,
-        company: companyName,
-        title: jobTitle,
-        salary_range: jobSalaryRange,
-        remote: isRemote,
-        website: jobWebsite,
-        found_on: jobFoundOn,
-        job_posting: jobPosting,
-        contacts: [jobContact],
-        notes: jobNotes,
-        archived: false,
-        application_date: applicationDate,
-        favorite: isFavorite,
-        status: 'applied'
-      })
+      body: JSON.stringify(dataToUpdate)
     })
     .then(response => response.json())
-    .then(response => console.log(response.data))
+    .then(response => console.log(response.message))
     .then(() => handleClose())
     .then(() => getJobs())
     .catch(error => console.log(error));
@@ -162,7 +181,6 @@ export default function JobForm(props: JobFormProps) {
 
   const handleContactChange = (key: string, value: string) => {
     setJobContact(Object.assign({...jobContact}, {[key]: value} as ContactType))
-    console.log(jobContact)
   }
 
   const Contacts = () => (

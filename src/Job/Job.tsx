@@ -183,7 +183,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
         placeholderText="Contacts"
         text={// eslint-disable-next-line
           // @ts-ignore
-          contacts[0] !== null ? `${contacts[0].name}\n${contacts[0].phone}\n${contacts[0].email}\n${contacts[0].role}\n` : 'No Contacts'
+          contacts && contacts[0] !== null ? `${contacts[0].name}\n${contacts[0].phone}\n${contacts[0].email}\n${contacts[0].role}\n` : 'No Contacts'
         }
       />
     </>
