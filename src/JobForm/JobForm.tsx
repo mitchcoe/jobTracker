@@ -119,6 +119,21 @@ export default function JobForm(props: JobFormProps) {
     .then(response => console.log(response.data))
     .then(() => handleClose())
     .then(() => getJobs())
+    .catch(error => console.log(error));
+  }
+
+  const handleDeleteJob = async () => {
+    await fetch(`/jobs/${job_id}`, {
+      method:'Delete',
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+      .then(response => response.json())
+      .then(response => console.log(response.message))
+      .then(() => handleClose())
+      .then(() => getJobs())
+      .catch(error => console.log(error));
   }
 
   const handleSubmit = () => {
@@ -307,6 +322,9 @@ export default function JobForm(props: JobFormProps) {
           <CardActions sx={{justifyContent: 'space-evenly'}}>
             <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
             <Button variant="outlined" onClick={handleClose}>Close</Button>
+            {formType === 'Edit' && (
+              <Button variant="outlined" sx={{color: 'red', borderColor: 'red'}} onClick={handleDeleteJob}>Delete</Button>
+            )}
           </CardActions>
         </Card>
       </Box>

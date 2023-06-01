@@ -80,7 +80,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row" align="left">
-            <a href={website}>
+            <a href={website} target="_blank" no-referrer="true">
               {company}
             </a>
           </TableCell>
@@ -121,7 +121,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
                         Remote: {`${remote}`}
                       </TableCell>
                       <TableCell>
-                        <a href={job_posting} >
+                        <a href={job_posting} target="_blank" no-referrer="true">
                           Found on: {found_on}
                         </a>
                       </TableCell>

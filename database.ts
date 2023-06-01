@@ -91,10 +91,15 @@ export const archiveJob = async(request: Request, response: Response) => {
   }
 }
 
-// export const deleteJob = async(request: Request, response: Response) => {
-//   try {
-
-//   } catch(e: unknown) {
-//     console.log((e as Error).stack)
-//   }
-// }
+export const deleteJob = async(request: Request, response: Response) => {
+  try {
+    const { job_id } = request.params
+    await knex.select().from('jobs').where({job_id}).del()
+    response.status(200).send({
+      message: `Job deleted with ID: ${job_id}`,
+      id: job_id
+    })
+  } catch(e: unknown) {
+    console.log((e as Error).stack)
+  }
+}

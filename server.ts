@@ -10,7 +10,7 @@ import {
   postJob,
   updateJob,
   archiveJob,
-  // deleteJob
+  deleteJob
 } from './database.ts'
 
 const app = express();
@@ -26,7 +26,7 @@ app.get('/jobs', getJobs)
 app.post('/jobs', postJob)
 app.put('/jobs', updateJob)
 app.put('/jobs/archive/:job_id', archiveJob)
-// app.delete('/jobs', deleteJob)
+app.delete('/jobs/:job_id', deleteJob)
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
