@@ -17,7 +17,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import { Edit, Inventory, KeyboardArrowDown, KeyboardArrowUp} from '@mui/icons-material';
+import { Edit, Inventory, KeyboardArrowDown, KeyboardArrowUp, Favorite, FavoriteBorder} from '@mui/icons-material';
 import type { JobType } from '../globalTypes';
 
 export default function Job(props: {job: JobType, getJobs: () => void}) {
@@ -76,6 +76,19 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({archived: !archived}),
+    })
+    .then(response => response.json())
+    .then(response => console.log(response.message))
+    .then(() => getJobs())
+  }
+
+  const handleFavoriteClick = async () => {
+    await fetch(`/jobs/archive/${job_id}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({job_id, favorite: !favorite}),
     })
     .then(response => response.json())
     .then(response => console.log(response.message))
@@ -143,7 +156,12 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
                       </TableCell>
                       <TableCell ><Button onClick={handleContactsOpen}>Contacts</Button></TableCell>
                       <TableCell ><Button onClick={handleNotesOpen}>Notes</Button></TableCell>
-                      <TableCell >Favorite: {`${favorite}`}</TableCell>
+                      <TableCell >
+                        Favorite:
+                        <IconButton onClick={handleFavoriteClick}>
+                          {favorite ? (<Favorite sx={{color: 'red'}}/>) : (<FavoriteBorder />)}
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                 </Table>
