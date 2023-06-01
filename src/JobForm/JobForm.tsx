@@ -51,9 +51,9 @@ export default function JobForm(props: JobFormProps) {
   const [jobWebsite, setJobWebsite] = useState(job?.website || '')
   const [jobFoundOn, setJobFoundOn] = useState(job?.found_on || '')
   const [jobPosting, setJobPosting] = useState(job?.job_posting || '')
-  const [jobContact, setJobContact] = useState<ContactType | null>(job?.contacts && job.contacts[0] || null)
+  const [jobContact, setJobContact] = useState<ContactType | null>(job?.contacts && job.contacts[0] !== null && job.contacts[0] || null)
   const [jobNotes, setJobNotes] = useState(job?.notes || '')
-  const [conctactsChecked, setContactsChecked] = useState(!!job?.contacts || false);
+  const [conctactsChecked, setContactsChecked] = useState(job?.contacts && job.contacts[0] !== null && !!job?.contacts || false);
   const [isFavorite, setIsFavorite] = useState(job?.favorite || false)
   const [jobStatus, setJobStatus] = useState(job?.status || '')
   const job_id = job?.job_id
