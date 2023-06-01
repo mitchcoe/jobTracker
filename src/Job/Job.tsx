@@ -25,7 +25,7 @@ import type { JobType } from '../globalTypes';
 export default function Job(props: {job: JobType, getJobs: () => void}) {
   const { getJobs, job } = props
   const {
-    // job_id,
+    job_id,
     company,
     title,
     salary_range,
@@ -53,9 +53,17 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
     setOpen(true)
   }
 
-  const handleArchiveClick = (event: React.SyntheticEvent) => {
-    event.stopPropagation();
-
+  const handleArchiveClick = async () => {
+    await fetch(`/jobs/archive/${job_id}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({archived: !archived}),
+    })
+    .then(response => response.json())
+    .then(response => console.log(response.message))
+    .then(() => getJobs())
   }
 
   const Row = () => {
@@ -133,7 +141,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{mb: 2}}>
         <Table aria-label="collapsible table">
           <TableBody>
             {Row()}

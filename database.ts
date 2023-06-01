@@ -74,13 +74,22 @@ export const updateJob = async(request: Request, response: Response) => {
   }
 }
 
-// export const archiveJob = async(request: Request, response: Response) => {
-//   try {
-
-//   } catch(e: unknown) {
-//     console.log((e as Error).stack)
-//   }
-// }
+export const archiveJob = async(request: Request, response: Response) => {
+  try {
+    const { job_id } = request.params;
+    const {...rest } = request.body;
+    const { archived } = rest;
+    const query = await knex('jobs').where({job_id}).update(rest, ['*']);
+    response.status(200).send({
+      message: `Job with Job ID: ${job_id} ${archived ? 'archived' : 'unarchived'}`,
+      // eslint-disable-next-line
+      // @ts-ignore
+      archived: query[0]
+    })
+  } catch(e: unknown) {
+    console.log((e as Error).stack)
+  }
+}
 
 // export const deleteJob = async(request: Request, response: Response) => {
 //   try {

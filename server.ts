@@ -9,7 +9,7 @@ import {
   getJobs,
   postJob,
   updateJob,
-  // archiveJob,
+  archiveJob,
   // deleteJob
 } from './database.ts'
 
@@ -25,7 +25,7 @@ app.use(
 app.get('/jobs', getJobs)
 app.post('/jobs', postJob)
 app.put('/jobs', updateJob)
-// app.put('/jobs/archive', archiveJob)
+app.put('/jobs/archive/:job_id', archiveJob)
 // app.delete('/jobs', deleteJob)
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
