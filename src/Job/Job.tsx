@@ -3,6 +3,7 @@ import JobForm from '../JobForm/JobForm';
 import {
   Typography,
   ButtonGroup,
+  Button,
   IconButton,
   Tooltip,
   Box,
@@ -13,14 +14,25 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Modal
 } from '@mui/material'
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { Edit, Inventory, KeyboardArrowDown, KeyboardArrowUp} from '@mui/icons-material';
 import type { JobType } from '../globalTypes';
 
 // type SetStateType = React.Dispatch<React.SetStateAction<boolean | number | string| number[]>>
 
 // type HandleFieldChangeType = (event: React.ChangeEvent<HTMLInputElement>, stateChangeFunc: SetStateType, valueType: string) => void
+
+const modalStyles = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+};
 
 export default function Job(props: {job: JobType, getJobs: () => void}) {
   const { getJobs, job } = props
@@ -43,6 +55,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
 
   const [open, setOpen] = useState(false);
   const [rowOpen, setRowOpen] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
   
 
   const handleClose = () => {
@@ -51,6 +64,14 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
 
   const handleEditClick = () => {
     setOpen(true)
+  }
+
+  const handleNotesOpen = () => {
+    setNotesOpen(true)
+  }
+
+  const handleNotesClose = () => {
+    setNotesOpen(false)
   }
 
   const handleArchiveClick = async () => {
@@ -126,7 +147,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
                         </a>
                       </TableCell>
                       <TableCell >Contacts</TableCell>
-                      <TableCell >Notes</TableCell>
+                      <TableCell ><Button onClick={handleNotesOpen}>Notes</Button></TableCell>
                       <TableCell >Favorite: {`${favorite}`}</TableCell>
                     </TableRow>
                   </TableHead>
@@ -155,6 +176,39 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
         formType="Edit"
         job={job}
       />
+      <Modal
+        open={notesOpen}
+        onClose={handleNotesClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+        component="form"
+        encType="multipart/form-data"
+        autoComplete="off"
+        sx={[
+          modalStyles,
+          {
+            minWidth: '300px',
+            width: '30vw',
+            overflow: 'scroll',
+            maxHeight: '85vh',
+            minHeight: '300px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex'
+          }
+        ]}
+      >
+        <TextareaAutosize
+          minRows={3}
+          placeholder="Notes"
+          style={{color: "black", backgroundColor: 'white', width: '30vw', height: '300px'}}
+          defaultValue={notes as string}
+          readOnly
+        />
+      </Box>
+      </Modal>
     </>
   )
 }
