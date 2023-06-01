@@ -13,7 +13,8 @@ import {
   Slider,
   Typography,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  Modal
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
@@ -25,14 +26,24 @@ function valuetext(value: number) {
 }
 
 type JobFormProps = {
+  jobFormOpen: boolean,
   handleClose: () => void,
   getJobs: () => void,
   job?: JobType,
   formType: "Create" | "Edit"
 }
 
+const modalStyles = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+};
+
 export default function JobForm(props: JobFormProps) {
-  const { job, handleClose, getJobs, formType } = props
+  const { job, handleClose, getJobs, formType, jobFormOpen } = props
   const [companyName, setCompanyName] = useState(job?.company || '')
   const [jobTitle, setJobTitle] = useState(job?.title || '')
   const [jobSalaryRange, setJobSalaryRange] = useState<number[]>(job?.salary_range || [65000, 150000])
@@ -46,6 +57,7 @@ export default function JobForm(props: JobFormProps) {
   const [isFavorite, setIsFavorite] = useState(job?.favorite || false)
   const [jobStatus, setJobStatus] = useState(job?.status || '')
   const job_id = job?.job_id
+  const applicationDate = job?.application_date || new Date().toISOString()
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     setJobSalaryRange(newValue as number[]);
@@ -98,7 +110,7 @@ export default function JobForm(props: JobFormProps) {
         contacts: [jobContact],
         notes: jobNotes,
         archived: false,
-        application_date: new Date().toISOString(),
+        application_date: applicationDate,
         favorite: isFavorite,
         status: 'applied'
       })
@@ -171,126 +183,133 @@ export default function JobForm(props: JobFormProps) {
     </>
   )
   return (
-    <Box
-      component="form"
-      encType="multipart/form-data"
-      autoComplete="off"
-      sx={{minWidth: '300px', width: '30vw', overflow: 'scroll', maxHeight: '85vh'}}
+    <Modal
+      open={jobFormOpen}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
-      <Card sx={{padding: '16px'}}>
-        <CardContent>
-          <Stack spacing={2}>
-            <TextField
-              label="Company"
-              value={companyName}
-              placeholder="Company"
-              variant="outlined"
-              onChange={(e) => setCompanyName(e.target.value)}
-            />
-            <TextField
-              label="Job Title"
-              value={jobTitle}
-              placeholder="Job Title"
-              variant="outlined"
-              onChange={(e) => setJobTitle(e.target.value)}
-            />
-            <Typography gutterBottom>
-              Salary Range
-            </Typography>
-            <Slider
-              getAriaLabel={() => 'Temperature range'}
-              value={jobSalaryRange}
-              onChange={handleSliderChange}
-              valueLabelDisplay="auto"
-              getAriaValueText={valuetext}
-              min={65000}
-              max={150000}
-              step={5000}
-            />
-            <FormControl>
-              <InputLabel id="remote-position">Remote Position</InputLabel>
-              <Select
-                labelId="remote-position"
-                label="Remote Position"
-                value={`${isRemote}`}
+      <Box
+        component="form"
+        encType="multipart/form-data"
+        autoComplete="off"
+        sx={[modalStyles, {minWidth: '300px', width: '30vw', overflow: 'scroll', maxHeight: '85vh'}]}
+      >
+        <Card sx={{padding: '16px'}}>
+          <CardContent>
+            <Stack spacing={2}>
+              <TextField
+                label="Company"
+                value={companyName}
+                placeholder="Company"
                 variant="outlined"
-                onChange={handleRemoteChange}
-              >
-                <MenuItem value="true">True</MenuItem>
-                <MenuItem value="false">False</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              label="Job Website"
-              value={jobWebsite}
-              placeholder="Job Website"
-              variant="outlined"
-              onChange={(e) => setJobWebsite(e.target.value)}
-            />
-            <TextField
-              label="Job Found on"
-              value={jobFoundOn}
-              placeholder="Job Found On"
-              variant="outlined"
-              onChange={(e) => setJobFoundOn(e.target.value)}
-            />
-            <TextField
-              label="Job Posting"
-              value={jobPosting}
-              placeholder="Job Posting"
-              variant="outlined"
-              onChange={(e) => setJobPosting(e.target.value)}
-            />
-            <FormControlLabel
-              control={<Checkbox checked={conctactsChecked} onChange={handleContactCheckboxChange}/>}
-              label="Contacts?"
-            />
-            {conctactsChecked && Contacts()}
-            {formType === "Edit" && (
-              <>
-                <FormControl>
-                  <InputLabel id="job-status">Job Status</InputLabel>
-                  <Select
-                    labelId="job-status"
-                    label="Job Status"
-                    value={jobStatus}
-                    variant="outlined"
-                    onChange={handleJobStatusChange}
-                  >
-                    <MenuItem value="applied">Applied</MenuItem>
-                    <MenuItem value="interviewing">Interviewing</MenuItem>
-                    <MenuItem value="rejected">Rejected</MenuItem>
-                    <MenuItem value="unavailable">Unavailable</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl>
-                  <InputLabel id="favorite">Favorite?</InputLabel>
-                  <Select
-                    labelId="favorite"
-                    label="Favorite?"
-                    value={`${isFavorite}`}
-                    variant="outlined"
-                    onChange={handleFavoriteChange}
-                  >
-                    <MenuItem value="true">True</MenuItem>
-                    <MenuItem value="false">False</MenuItem>
-                  </Select>
-                </FormControl>
-              </>
-            )}
-            <TextareaAutosize
-              minRows={3}
-              placeholder="Notes"
-              style={{color: "black", backgroundColor: 'white'}}
-              onChange={(e) => setJobNotes(e.target.value)}
-            />
-          </Stack>
-        </CardContent>
-        <CardActions sx={{justifyContent: 'space-evenly'}}>
-          <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
-          <Button variant="outlined" onClick={handleClose}>Close</Button>
-        </CardActions>
-      </Card>
-    </Box>
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+              <TextField
+                label="Job Title"
+                value={jobTitle}
+                placeholder="Job Title"
+                variant="outlined"
+                onChange={(e) => setJobTitle(e.target.value)}
+              />
+              <Typography gutterBottom>
+                Salary Range
+              </Typography>
+              <Slider
+                getAriaLabel={() => 'Temperature range'}
+                value={jobSalaryRange}
+                onChange={handleSliderChange}
+                valueLabelDisplay="auto"
+                getAriaValueText={valuetext}
+                min={65000}
+                max={150000}
+                step={5000}
+              />
+              <FormControl>
+                <InputLabel id="remote-position">Remote Position</InputLabel>
+                <Select
+                  labelId="remote-position"
+                  label="Remote Position"
+                  value={`${isRemote}`}
+                  variant="outlined"
+                  onChange={handleRemoteChange}
+                >
+                  <MenuItem value="true">True</MenuItem>
+                  <MenuItem value="false">False</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                label="Job Website"
+                value={jobWebsite}
+                placeholder="Job Website"
+                variant="outlined"
+                onChange={(e) => setJobWebsite(e.target.value)}
+              />
+              <TextField
+                label="Job Found on"
+                value={jobFoundOn}
+                placeholder="Job Found On"
+                variant="outlined"
+                onChange={(e) => setJobFoundOn(e.target.value)}
+              />
+              <TextField
+                label="Job Posting"
+                value={jobPosting}
+                placeholder="Job Posting"
+                variant="outlined"
+                onChange={(e) => setJobPosting(e.target.value)}
+              />
+              <FormControlLabel
+                control={<Checkbox checked={conctactsChecked} onChange={handleContactCheckboxChange}/>}
+                label="Contacts?"
+              />
+              {conctactsChecked && Contacts()}
+              {formType === "Edit" && (
+                <>
+                  <FormControl>
+                    <InputLabel id="job-status">Job Status</InputLabel>
+                    <Select
+                      labelId="job-status"
+                      label="Job Status"
+                      value={jobStatus}
+                      variant="outlined"
+                      onChange={handleJobStatusChange}
+                    >
+                      <MenuItem value="applied">Applied</MenuItem>
+                      <MenuItem value="interviewing">Interviewing</MenuItem>
+                      <MenuItem value="rejected">Rejected</MenuItem>
+                      <MenuItem value="unavailable">Unavailable</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <InputLabel id="favorite">Favorite?</InputLabel>
+                    <Select
+                      labelId="favorite"
+                      label="Favorite?"
+                      value={`${isFavorite}`}
+                      variant="outlined"
+                      onChange={handleFavoriteChange}
+                    >
+                      <MenuItem value="true">True</MenuItem>
+                      <MenuItem value="false">False</MenuItem>
+                    </Select>
+                  </FormControl>
+                </>
+              )}
+              <TextareaAutosize
+                minRows={3}
+                placeholder="Notes"
+                style={{color: "black", backgroundColor: 'white'}}
+                onChange={(e) => setJobNotes(e.target.value)}
+              />
+            </Stack>
+          </CardContent>
+          <CardActions sx={{justifyContent: 'space-evenly'}}>
+            <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
+            <Button variant="outlined" onClick={handleClose}>Close</Button>
+          </CardActions>
+        </Card>
+      </Box>
+    </Modal>
   )
 }

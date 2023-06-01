@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import Button from '@mui/material/Button'
-import Popper from '@mui/material/Popper';
 import './App.css'
 import JobsContainer from './JobsContainer/JobsContainer'
 import JobForm from './JobForm/JobForm'
@@ -9,9 +8,7 @@ import type { JobType } from './globalTypes'
 
 function App() {
   const [jobs, setJobs] = useState<JobType[]>([])
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
-  const id = open ? 'new-job-popper' : undefined;
 
   const getJobs = useCallback(async () => {
     await fetch('/jobs')
@@ -20,13 +17,11 @@ function App() {
       .catch(error => console.log(error));
   }, [])
 
-  const openJobForm = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    setAnchorEl(e.currentTarget)
+  const openJobForm = () => {
     setOpen(true)
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
     setOpen(false)
   }
 
@@ -53,40 +48,12 @@ function App() {
       <div>
         <JobsContainer jobs={jobs} getJobs={getJobs}/>
       </div>
-      <Popper
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        sx={{zIndex: 100}}
-        modifiers={[
-          {
-            name: 'flip',
-            enabled: true,
-            options: {
-              altBoundary: true,
-              rootBoundary: 'document',
-              padding: 8,
-            },
-          },
-          {
-            name: 'preventOverflow',
-            enabled: true,
-            options: {
-              altAxis: true,
-              altBoundary: true,
-              tether: true,
-              rootBoundary: 'document',
-              padding: 8,
-            },
-          },
-        ]}
-      >
-        <JobForm
-          handleClose={handleClose}
-          getJobs={getJobs}
-          formType="Create"
-        />
-      </Popper>
+      <JobForm
+        jobFormOpen={open}
+        handleClose={handleClose}
+        getJobs={getJobs}
+        formType="Create"
+      />
     </React.Fragment>
   )
 }
