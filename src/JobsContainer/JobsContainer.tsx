@@ -32,8 +32,20 @@ type TablePaginationActionsProps = {
   ) => void;
 }
 
+function salarySort(a: JobType, b: JobType, orderBy: 'salary_range' = 'salary_range') {
+  const salaryA: number = a[orderBy].length === 1 ? a[orderBy][0] : a[orderBy][1];
+  const salaryB: number = b[orderBy].length === 1 ? b[orderBy][0] : b[orderBy][1];
+  if (salaryB < salaryA) {
+    return -1;
+  }
+  if (salaryB > salaryA) {
+    return 1;
+  }
+  return 0;
+}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if(orderBy === 'salary_range') return salarySort(a as JobType, b as JobType)
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -203,14 +215,14 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
           onChange={handleRequestSort}
           sx={{color: 'white', '& fieldset': {border: 'none'}, '& svg': {color: 'white'}}}
         >
-          {/* <MenuItem value="salary_range">
-            Salary
-          </MenuItem> */}
-          <MenuItem value="remote">
-            Remote Position
-          </MenuItem>
           <MenuItem value="application_date">
             Application Date
+          </MenuItem>
+          <MenuItem value="salary_range">
+            Salary
+          </MenuItem>
+          <MenuItem value="remote">
+            Remote Position
           </MenuItem>
           <MenuItem value="favorite">
             Favorites
