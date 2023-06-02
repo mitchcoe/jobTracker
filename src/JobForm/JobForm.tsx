@@ -163,6 +163,21 @@ export default function JobForm(props: JobFormProps) {
     }
   }
 
+  const handleCreateFormClose = () => {
+    setCompanyName('')
+    setJobTitle('')
+    setJobSalaryRange([65000, 150000])
+    setIsRemote(false)
+    setJobWebsite('')
+    setJobFoundOn('')
+    setJobPosting('')
+    setJobContact(null)
+    setJobNotes('')
+    setContactsChecked(false)
+    setIsFavorite(false)
+    handleClose()
+  }
+
   const handleRemoteChange = (event: SelectChangeEvent) => {
     event.target.value === "true" ? setIsRemote(true) : setIsRemote(false)
   }
@@ -181,6 +196,14 @@ export default function JobForm(props: JobFormProps) {
 
   const handleContactChange = (key: string, value: string) => {
     setJobContact(Object.assign({...jobContact}, {[key]: value} as ContactType))
+  }
+
+  const isValid = () => {
+    if(companyName && jobTitle && jobWebsite && jobFoundOn && jobPosting) {
+      return true
+    } else {
+      return false
+    }
   }
 
   const Contacts = () => (
@@ -237,6 +260,7 @@ export default function JobForm(props: JobFormProps) {
                 placeholder="Company"
                 variant="outlined"
                 onChange={(e) => setCompanyName(e.target.value)}
+                required
               />
               <TextField
                 label="Job Title"
@@ -244,6 +268,7 @@ export default function JobForm(props: JobFormProps) {
                 placeholder="Job Title"
                 variant="outlined"
                 onChange={(e) => setJobTitle(e.target.value)}
+                required
               />
               <Typography gutterBottom>
                 Salary Range
@@ -277,6 +302,7 @@ export default function JobForm(props: JobFormProps) {
                 placeholder="Job Website"
                 variant="outlined"
                 onChange={(e) => setJobWebsite(e.target.value)}
+                required
               />
               <TextField
                 label="Job Found on"
@@ -284,6 +310,7 @@ export default function JobForm(props: JobFormProps) {
                 placeholder="Job Found On"
                 variant="outlined"
                 onChange={(e) => setJobFoundOn(e.target.value)}
+                required
               />
               <TextField
                 label="Job Posting"
@@ -291,6 +318,7 @@ export default function JobForm(props: JobFormProps) {
                 placeholder="Job Posting"
                 variant="outlined"
                 onChange={(e) => setJobPosting(e.target.value)}
+                required
               />
               <FormControlLabel
                 control={<Checkbox checked={conctactsChecked} onChange={handleContactCheckboxChange}/>}
@@ -314,21 +342,21 @@ export default function JobForm(props: JobFormProps) {
                       <MenuItem value="unavailable">Unavailable</MenuItem>
                     </Select>
                   </FormControl>
-                  <FormControl>
-                    <InputLabel id="favorite">Favorite?</InputLabel>
-                    <Select
-                      labelId="favorite"
-                      label="Favorite?"
-                      value={`${isFavorite}`}
-                      variant="outlined"
-                      onChange={handleFavoriteChange}
-                    >
-                      <MenuItem value="true">True</MenuItem>
-                      <MenuItem value="false">False</MenuItem>
-                    </Select>
-                  </FormControl>
                 </>
               )}
+              <FormControl>
+                <InputLabel id="favorite">Favorite?</InputLabel>
+                <Select
+                  labelId="favorite"
+                  label="Favorite?"
+                  value={`${isFavorite}`}
+                  variant="outlined"
+                  onChange={handleFavoriteChange}
+                >
+                  <MenuItem value="true">True</MenuItem>
+                  <MenuItem value="false">False</MenuItem>
+                </Select>
+              </FormControl>
               <TextareaAutosize
                 minRows={3}
                 placeholder="Notes"
@@ -338,8 +366,8 @@ export default function JobForm(props: JobFormProps) {
             </Stack>
           </CardContent>
           <CardActions sx={{justifyContent: 'space-evenly'}}>
-            <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
-            <Button variant="outlined" onClick={handleClose}>Close</Button>
+            <Button variant="outlined" onClick={handleSubmit} disabled={!isValid()}>Submit</Button>
+            <Button variant="outlined" onClick={formType === 'Edit' ? handleClose : handleCreateFormClose}>Close</Button>
             {formType === 'Edit' && (
               <Button variant="outlined" sx={{color: 'red', borderColor: 'red'}} onClick={handleDeleteJob}>Delete</Button>
             )}
