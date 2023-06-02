@@ -3,10 +3,14 @@ import Job from '../Job/Job';
 import { Tabs, Tab, Box, TablePagination, IconButton, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useTheme } from '@mui/material/styles';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
+import {
+  FirstPage,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  LastPage,
+  North,
+  South
+} from '@mui/icons-material'
 
 import type { JobType } from '../globalTypes';
 
@@ -81,7 +85,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
         aria-label="first page"
         sx={{'&:disabled': {color: 'grey'}, color: 'white'}}
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+        {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
@@ -105,7 +109,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
         aria-label="last page"
         sx={{'&:disabled': {color: 'grey'}, color: 'white'}}
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+        {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
       </IconButton>
     </Box>
   );
@@ -139,7 +143,7 @@ function a11yProps(index: number) {
 }
 
 export default function JobsContainer(props: {jobs: JobType[], getJobs: () => void,}) {
-  const [order, setOrder] = useState<Order>('asc');
+  const [order, setOrder] = useState<Order>('desc');
   const [orderBy, setOrderBy] = useState< 'remote' | 'application_date' | 'favorite'>('application_date');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -150,10 +154,12 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
     event: SelectChangeEvent,
   ) => {
     const property: 'remote' | 'application_date' | 'favorite' = event.target.value as OrderProperty
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
+  const handleDescendingOrAscendingOrder = () => {
+    setOrder(order === 'asc' ? 'desc' : 'asc');
+  }
 
   // const testJobs = jobs && Array(6).fill(jobs[0])
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -178,7 +184,10 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {jobs.filter((job) => !job.archived).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy)).map((job, key) => (
+        { jobs.filter((job) => !job.archived)
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .sort(getComparator(order, orderBy))
+          .map((job, key) => (
           <Job job={job} key={key + job.title} getJobs={getJobs}/>
         ))}
       </TabPanel>
@@ -207,6 +216,13 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
             Favorites
           </MenuItem>
         </Select>
+        <IconButton
+          aria-label="expand row"
+          size="small"
+          onClick={handleDescendingOrAscendingOrder}
+        >
+          {order === 'asc' ? <North sx={{color: 'white'}}/> : <South sx={{color: 'white'}}/>}
+        </IconButton>
         <Typography>{order === 'asc' ? 'Asc' : 'Desc'}</Typography>
       </div>
       <TablePagination
