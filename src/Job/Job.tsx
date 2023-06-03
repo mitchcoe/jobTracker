@@ -113,7 +113,7 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
               {company}
             </a>
           </TableCell>
-          <TableCell align="left">{title}</TableCell>
+          <TableCell align="left" sx={{maxWidth: '250px'}}>{title}</TableCell>
           <TableCell align="center">{status[0].toUpperCase() + status.slice(1)}</TableCell>
           <TableCell align="right">
             ${salary_range && salary_range.length > 1 ? 

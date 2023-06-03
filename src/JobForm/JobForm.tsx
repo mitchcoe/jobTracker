@@ -87,7 +87,7 @@ export default function JobForm(props: JobFormProps) {
     })
     .then(response => response.json())
     .then(response => console.log(response.data))
-    .then(() => handleClose())
+    .then(() => handleClearAndClose())
     .then(() => getJobs())
     .catch(error => console.log(error));
   }
@@ -136,7 +136,7 @@ export default function JobForm(props: JobFormProps) {
     })
     .then(response => response.json())
     .then(response => console.log(response.message))
-    .then(() => handleClose())
+    .then(() => handleClearAndClose())
     .then(() => getJobs())
     .catch(error => console.log(error));
   }
@@ -150,7 +150,7 @@ export default function JobForm(props: JobFormProps) {
     })
       .then(response => response.json())
       .then(response => console.log(response.message))
-      .then(() => handleClose())
+      .then(() => handleClearAndClose())
       .then(() => getJobs())
       .catch(error => console.log(error));
   }
@@ -158,12 +158,14 @@ export default function JobForm(props: JobFormProps) {
   const handleSubmit = () => {
     if(formType === 'Edit') {
       handleEditJob()
+      handleClearAndClose()
     } else {
       handleCreateJob()
+      handleClearAndClose()
     }
   }
 
-  const handleCreateFormClose = () => {
+  const handleClearAndClose = () => {
     setCompanyName('')
     setJobTitle('')
     setJobSalaryRange([65000, 150000])
@@ -360,6 +362,7 @@ export default function JobForm(props: JobFormProps) {
               <TextareaAutosize
                 minRows={3}
                 placeholder="Notes"
+                defaultValue={jobNotes}
                 style={{color: "black", backgroundColor: 'white'}}
                 onChange={(e) => setJobNotes(e.target.value)}
               />
@@ -367,7 +370,7 @@ export default function JobForm(props: JobFormProps) {
           </CardContent>
           <CardActions sx={{justifyContent: 'space-evenly'}}>
             <Button variant="outlined" onClick={handleSubmit} disabled={!isValid()}>Submit</Button>
-            <Button variant="outlined" onClick={formType === 'Edit' ? handleClose : handleCreateFormClose}>Close</Button>
+            <Button variant="outlined" onClick={handleClearAndClose}>Close</Button>
             {formType === 'Edit' && (
               <Button variant="outlined" sx={{color: 'red', borderColor: 'red'}} onClick={handleDeleteJob}>Delete</Button>
             )}
