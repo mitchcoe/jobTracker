@@ -108,12 +108,12 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
               {rowOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row" align="left">
+          <TableCell component="th" scope="row" align="left" sx={{width: '100px'}}>
             <a href={website} target="_blank" no-referrer="true">
               {company}
             </a>
           </TableCell>
-          <TableCell align="left" sx={{maxWidth: '250px'}}>{title}</TableCell>
+          <TableCell align="left" sx={{width: '150px'}}>{title}</TableCell>
           <TableCell align="center">{status[0].toUpperCase() + status.slice(1)}</TableCell>
           <TableCell align="right">
             ${salary_range && salary_range.length > 1 ? 

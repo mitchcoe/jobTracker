@@ -158,7 +158,7 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
   const [order, setOrder] = useState<Order>('desc');
   const [orderBy, setOrderBy] = useState< 'remote' | 'application_date' | 'favorite'>('application_date');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [value, setValue] = useState(0);
   const { jobs, getJobs } = props
 
