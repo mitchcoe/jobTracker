@@ -197,14 +197,17 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
       </Box>
       <TabPanel value={value} index={0}>
         { jobs.filter((job) => !job.archived)
-          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           .sort(getComparator(order, orderBy))
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           .map((job, key) => (
           <Job job={job} key={key + job.title} getJobs={getJobs}/>
         ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {jobs.filter((job) => job.archived).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((job, key) => (
+        { jobs.filter((job) => job.archived)
+          .sort(getComparator(order, orderBy))
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((job, key) => (
           <Job job={job} key={key + job.title} getJobs={getJobs}/>
         ))}
       </TabPanel>
