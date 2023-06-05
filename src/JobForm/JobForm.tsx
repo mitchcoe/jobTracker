@@ -42,6 +42,17 @@ const modalStyles = {
   boxShadow: 24,
 };
 
+const sliderMarks = [
+  {
+    value: 65000,
+    label: '$65000'
+  },
+  {
+    value: 150000,
+    label: '$150000'
+  }
+]
+
 export default function JobForm(props: JobFormProps) {
   const { job, handleClose, getJobs, formType, jobFormOpen } = props
   const [companyName, setCompanyName] = useState( formType === 'Edit' ? job?.company : '')
@@ -283,6 +294,8 @@ export default function JobForm(props: JobFormProps) {
                 min={65000}
                 max={150000}
                 step={5000}
+                marks={sliderMarks}
+                sx={{pb: 3}}
               />
               <FormControl>
                 <InputLabel id="remote-position">Remote Position</InputLabel>
