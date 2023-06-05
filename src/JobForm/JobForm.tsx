@@ -44,18 +44,18 @@ const modalStyles = {
 
 export default function JobForm(props: JobFormProps) {
   const { job, handleClose, getJobs, formType, jobFormOpen } = props
-  const [companyName, setCompanyName] = useState(job?.company || '')
-  const [jobTitle, setJobTitle] = useState(job?.title || '')
-  const [jobSalaryRange, setJobSalaryRange] = useState<number[]>(job?.salary_range || [65000, 150000])
-  const [isRemote, setIsRemote] = useState<boolean>(job?.remote || false)
-  const [jobWebsite, setJobWebsite] = useState(job?.website || '')
-  const [jobFoundOn, setJobFoundOn] = useState(job?.found_on || '')
-  const [jobPosting, setJobPosting] = useState(job?.job_posting || '')
-  const [jobContact, setJobContact] = useState<ContactType | null>(job?.contacts && job.contacts[0] !== null && job.contacts[0] || null)
-  const [jobNotes, setJobNotes] = useState(job?.notes || '')
-  const [conctactsChecked, setContactsChecked] = useState(job?.contacts && job.contacts[0] !== null && !!job?.contacts || false);
-  const [isFavorite, setIsFavorite] = useState(job?.favorite || false)
-  const [jobStatus, setJobStatus] = useState(job?.status || '')
+  const [companyName, setCompanyName] = useState( formType === 'Edit' ? job?.company : '')
+  const [jobTitle, setJobTitle] = useState(formType === 'Edit' ? job?.title : '')
+  const [jobSalaryRange, setJobSalaryRange] = useState<number[]>(job && formType === 'Edit' ? job.salary_range : [65000, 150000])
+  const [isRemote, setIsRemote] = useState<boolean>(job && formType === 'Edit' ? job.remote : false)
+  const [jobWebsite, setJobWebsite] = useState(formType === 'Edit' ? job?.website : '')
+  const [jobFoundOn, setJobFoundOn] = useState(formType === 'Edit' ? job?.found_on : '')
+  const [jobPosting, setJobPosting] = useState(formType === 'Edit' ? job?.job_posting : '')
+  const [jobContact, setJobContact] = useState<ContactType | null>(formType === 'Edit' && job?.contacts && job.contacts[0] !== null ? job.contacts[0] : null)
+  const [jobNotes, setJobNotes] = useState(job && formType === 'Edit' ? job.notes as string : '')
+  const [conctactsChecked, setContactsChecked] = useState(formType === 'Edit' && job?.contacts && job.contacts[0] !== null ? !!job?.contacts : false);
+  const [isFavorite, setIsFavorite] = useState(formType === 'Edit' ? job?.favorite : false)
+  const [jobStatus, setJobStatus] = useState(formType === 'Edit' ? job?.status : '')
   const job_id = job?.job_id
   const applicationDate = job?.application_date || new Date().toISOString()
 
@@ -136,7 +136,7 @@ export default function JobForm(props: JobFormProps) {
     })
     .then(response => response.json())
     .then(response => console.log(response.message))
-    .then(() => handleClearAndClose())
+    .then(() => handleClose())
     .then(() => getJobs())
     .catch(error => console.log(error));
   }
@@ -150,7 +150,7 @@ export default function JobForm(props: JobFormProps) {
     })
       .then(response => response.json())
       .then(response => console.log(response.message))
-      .then(() => handleClearAndClose())
+      .then(() => handleClose())
       .then(() => getJobs())
       .catch(error => console.log(error));
   }
@@ -158,10 +158,8 @@ export default function JobForm(props: JobFormProps) {
   const handleSubmit = () => {
     if(formType === 'Edit') {
       handleEditJob()
-      handleClearAndClose()
     } else {
       handleCreateJob()
-      handleClearAndClose()
     }
   }
 
@@ -240,6 +238,8 @@ export default function JobForm(props: JobFormProps) {
       />
     </>
   )
+  console.log(job)
+  console.log(companyName)
   return (
     <Modal
       open={jobFormOpen}
@@ -370,7 +370,7 @@ export default function JobForm(props: JobFormProps) {
           </CardContent>
           <CardActions sx={{justifyContent: 'space-evenly'}}>
             <Button variant="outlined" onClick={handleSubmit} disabled={!isValid()}>Submit</Button>
-            <Button variant="outlined" onClick={handleClearAndClose}>Close</Button>
+            <Button variant="outlined" onClick={handleClose}>Close</Button>
             {formType === 'Edit' && (
               <Button variant="outlined" sx={{color: 'red', borderColor: 'red'}} onClick={handleDeleteJob}>Delete</Button>
             )}
