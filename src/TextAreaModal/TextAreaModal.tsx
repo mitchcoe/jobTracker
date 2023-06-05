@@ -42,7 +42,7 @@ export default function TextAreaModal(props: TextAreaModalProps) {
       >
         <TextareaAutosize
           minRows={3}
-          placeholder="Contacts"
+          placeholder={placeholderText}
           style={{color: "black", backgroundColor: 'white', width: '30vw', height: '300px'}}
           defaultValue={text || placeholderText}
           readOnly
