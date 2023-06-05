@@ -103,10 +103,10 @@ export default function JobForm(props: JobFormProps) {
       found_on: jobFoundOn,
       job_posting: jobPosting,
       notes: jobNotes,
-      archived: false,
+      // archived: false,
       application_date: applicationDate,
       favorite: isFavorite,
-      status: 'applied'
+      status: jobStatus
     }
 
     // this helps ensure that there is more than just a role present on a contact to help identify them
@@ -276,7 +276,7 @@ export default function JobForm(props: JobFormProps) {
                 Salary Range
               </Typography>
               <Slider
-                getAriaLabel={() => 'Temperature range'}
+                getAriaLabel={() => 'Salary range'}
                 value={jobSalaryRange}
                 onChange={handleSliderChange}
                 valueLabelDisplay="auto"
