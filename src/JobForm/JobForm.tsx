@@ -238,8 +238,7 @@ export default function JobForm(props: JobFormProps) {
       />
     </>
   )
-  console.log(job)
-  console.log(companyName)
+
   return (
     <Modal
       open={jobFormOpen}
