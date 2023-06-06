@@ -11,10 +11,9 @@ function App() {
   const [open, setOpen] = useState(false);
 
   const getJobs = useCallback(async () => {
-    await fetch('/jobs')
-      .then(response => response.json())
-      .then(response => setJobs(response))
-      .catch(error => console.log(error));
+    const response = await fetch('/jobs').catch(error => console.log(error))
+    const jobs = response && await response.json()
+    setJobs(jobs);
   }, [])
 
   const openJobForm = () => {

@@ -70,29 +70,31 @@ export default function Job(props: {job: JobType, getJobs: () => void}) {
   }
 
   const handleArchiveClick = async () => {
-    await fetch(`/jobs/archive/${job_id}`, {
+    const response = await fetch(`/jobs/archive/${job_id}`, {
       method: 'PUT',
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({archived: !archived}),
-    })
-    .then(response => response.json())
-    .then(response => console.log(response.message))
-    .then(() => getJobs())
+    }).catch(error => console.log(error))
+
+    const data = response && await response.json() as {message: string, archived: JobType}
+    data && console.log(data.message, data.archived)
+    getJobs()
   }
 
   const handleFavoriteClick = async () => {
-    await fetch(`/jobs/archive/${job_id}`, {
+    const response = await fetch(`/jobs`, {
       method: 'PUT',
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({job_id, favorite: !favorite}),
-    })
-    .then(response => response.json())
-    .then(response => console.log(response.message))
-    .then(() => getJobs())
+    }).catch(error => console.log(error))
+
+    const data = response && await response.json() as {message: string, updated: JobType}
+    data && console.log(data.message)
+    getJobs()
   }
 
   const Row = () => {

@@ -75,7 +75,7 @@ export default function JobForm(props: JobFormProps) {
   };
 
   const handleCreateJob = async () => {
-    await fetch('/jobs', {
+    const response = await fetch('/jobs', {
       method:'POST',
       headers: {
         "Content-Type": "application/json"
@@ -95,12 +95,12 @@ export default function JobForm(props: JobFormProps) {
         favorite: isFavorite,
         status: 'applied'
       }),
-    })
-    .then(response => response.json())
-    .then(response => console.log(response.data))
-    .then(() => handleClearAndClose())
-    .then(() => getJobs())
-    .catch(error => console.log(error));
+    }).catch(error => console.log(error));
+
+    const data = response && await response.json() as {message: string, data: JobType}
+    data && console.log(data.data)
+    handleClearAndClose()
+    getJobs()
   }
 
   const handleEditJob = async () => {
@@ -138,32 +138,31 @@ export default function JobForm(props: JobFormProps) {
       }
     }
 
-    await fetch('/jobs', {
+    const response = await fetch('/jobs', {
       method:'PUT',
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(dataToUpdate)
-    })
-    .then(response => response.json())
-    .then(response => console.log(response.message))
-    .then(() => handleClose())
-    .then(() => getJobs())
-    .catch(error => console.log(error));
+    }).catch(error => console.log(error))
+    const data = response && await response.json() as {message: string, archived: JobType}
+    data && console.log(data.message)
+    handleClose()
+    getJobs()
   }
 
   const handleDeleteJob = async () => {
-    await fetch(`/jobs/${job_id}`, {
+    const response = await fetch(`/jobs/${job_id}`, {
       method:'Delete',
       headers: {
         "Content-Type": "application/json"
       },
-    })
-      .then(response => response.json())
-      .then(response => console.log(response.message))
-      .then(() => handleClose())
-      .then(() => getJobs())
-      .catch(error => console.log(error));
+    }).catch(error => console.log(error));
+
+    const data = response && await response.json() as {message: string, id: number}
+    data && console.log(data.message)
+    handleClose()
+    getJobs()
   }
 
   const handleSubmit = () => {
