@@ -1,6 +1,7 @@
 import { rest } from 'msw'
+import { JobType } from '../globalTypes'
 
-export const jobs = [
+export const jobs: JobType[] = [
   {
     job_id: 17,
     company: 'Walgreens',
@@ -10,7 +11,7 @@ export const jobs = [
     website: 'www.walgreens.com',
     found_on: 'Indeed',
     job_posting: 'https://www.indeed.com/viewjob?from=app-tracker-saved-appcard&hl=en&jk=f115d3d74002caac&tk=1h21k774hih75801',
-    contacts: [ null ],
+    contacts: null,
     notes: 'salary not posted, sign in via linkedin. Rejected 6/4/2023',
     archived: true,
     application_date: '2023-06-03T05:00:00.000Z',
@@ -18,7 +19,7 @@ export const jobs = [
     status: 'rejected'
   },
   {
-    job_id: 17,
+    job_id: 16,
     company: 'Test Company',
     title: 'Test Title',
     salary_range: [100000, 120000],
@@ -28,17 +29,17 @@ export const jobs = [
     job_posting: 'https://www.test.com',
     contacts: [
       {
-        contact_id: 1,
         name: 'Test Name',
         email: '',
         phone: '',
+        role: ''
       }
     ],
     notes: 'Test Notes',
     archived: false,
     application_date: '2023-06-03T05:00:00.000Z',
     favorite: false,
-    status: 'Applied',
+    status: 'applied',
   }
 ]
 
