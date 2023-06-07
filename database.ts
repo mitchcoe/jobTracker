@@ -7,7 +7,6 @@ import type { JobType } from './src/globalTypes.js';
 export const getJobs = async(_request: Request, response: Response) => {
   try {
     const query = await knex.select().from('jobs');
-    // console.log(query)
     response.status(200).json(query);
   } catch(e: unknown) {
     console.log((e as Error).stack)
@@ -15,7 +14,6 @@ export const getJobs = async(_request: Request, response: Response) => {
 }
 
 export const postJob = async(request: Request, response: Response) => {
-  // console.log(request.body)
   try {
     const {
       company,
@@ -62,11 +60,9 @@ export const postJob = async(request: Request, response: Response) => {
 export const updateJob = async(request: Request, response: Response) => {
   try {
     const { job_id, ...rest } = request.body;
-    const query = await knex('jobs').where({job_id}).update(rest, ['*']);
+    const query = await knex('jobs').where({job_id}).update(rest, ['*']) as unknown as JobType[]
     response.status(200).send({
       message: `Job with ID: ${job_id} updated`,
-      // eslint-disable-next-line
-      // @ts-ignore
       updated: query[0]
     })
   } catch(e: unknown) {
@@ -79,12 +75,10 @@ export const archiveJob = async(request: Request, response: Response) => {
     const { job_id } = request.params;
     const {...rest } = request.body;
     const { archived } = rest;
-    const query = await knex('jobs').where({job_id}).update(rest, ['*']);
+    const query = await knex('jobs').where({job_id}).update(rest, ['*']) as unknown as JobType[]
     response.status(200).send({
       message: `Job with Job ID: ${job_id} ${archived ? 'archived' : 'unarchived'}`,
-      // eslint-disable-next-line
-      // @ts-ignore
-      archived: query[0]
+      archived: query[0],
     })
   } catch(e: unknown) {
     console.log((e as Error).stack)
