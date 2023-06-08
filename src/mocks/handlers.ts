@@ -50,25 +50,25 @@ export const handlers = [
       ctx.json(jobs)
     )
   }),
-  rest.post('/jobs', (req, res, ctx) => {
+  rest.post('/jobs', (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json(jobs)
     )
   }),
-  rest.put('/jobs', (req, res, ctx) => {
+  rest.put('/jobs', (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json(jobs)
     )
   }),
-  rest.put('/jobs/archive/17', (req, res, ctx) => {
+  rest.put('/jobs/archive/17', (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json(jobs)
     )
   }),
-  rest.delete('/jobs/17', (req, res, ctx) => {
+  rest.delete('/jobs/17', (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json(jobs)
