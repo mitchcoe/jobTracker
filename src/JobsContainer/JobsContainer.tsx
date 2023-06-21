@@ -161,6 +161,7 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [value, setValue] = useState(0);
+  const [tab, setTab] = useState<'current' | 'archived'>('current')
   const { jobs, getJobs } = props
 
   const handleRequestSort = (
@@ -177,6 +178,8 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
   // const testJobs = jobs && Array(6).fill(jobs[0])
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    setTab(newValue === 0 ? 'current' : 'archived')
+    setPage(0)
   };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
@@ -243,7 +246,7 @@ export default function JobsContainer(props: {jobs: JobType[], getJobs: () => vo
       </div>
       <TablePagination
         component="div"
-        count={jobs.length}
+        count={jobs.filter(job => tab === 'current' ? !job.archived : job.archived).length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
