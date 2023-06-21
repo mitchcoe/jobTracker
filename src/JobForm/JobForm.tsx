@@ -351,6 +351,7 @@ export default function JobForm(props: JobFormProps) {
                     >
                       <MenuItem value="applied">Applied</MenuItem>
                       <MenuItem value="interviewing">Interviewing</MenuItem>
+                      <MenuItem value="hired">Hired</MenuItem>
                       <MenuItem value="rejected">Rejected</MenuItem>
                       <MenuItem value="unavailable">Unavailable</MenuItem>
                     </Select>

@@ -12,7 +12,7 @@ export type JobType = {
   archived: boolean,
   application_date: string,
   favorite: boolean,
-  status: 'applied' | 'interviewing' | 'rejected' | 'unavailable'
+  status: 'applied' | 'interviewing' | 'rejected' | 'unavailable' | 'hired'
 };
 
 export interface ContactType extends Record<string, string> {
